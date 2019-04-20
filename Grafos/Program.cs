@@ -186,7 +186,8 @@ public class Program
                     VerEuller();
                     break;
                 case 9:
-                    MatrizAdjacencia();
+                    Console.Clear();
+                    MatrizAdjacencia(lista_g[numeroGrafo]);
                     break;
             }
         } while (condicao != 0);
@@ -453,9 +454,48 @@ public class Program
 
     }
 
-    public static void MatrizAdjacencia()
+    public static void MatrizAdjacencia(Grafo grafo)
     {
+        var listaVertice = grafo.ListaVertices;
 
+        //Cabeçalho
+        Console.Write("   ");
+        foreach (var i in grafo.ListaVertices)
+        {
+            Console.Write(" | " + i.Nome);
+        }
+
+        foreach(var v in listaVertice)
+        {
+            Console.Write("\n" + v.Nome);
+
+            foreach(var i in grafo.ListaVertices)
+            {
+                int a = 0;
+
+                foreach (var j in grafo.ListaArestas)
+                {
+                    if (grafo.Dirigido == 1)
+                    {
+                        if ((j.Vertice_O.Id_v == v.Id_v && j.Vertive_D.Id_v == i.Id_v))
+                        {
+                            a = j.Peso;
+                        }
+                    }
+                    else
+                    {
+                        if ((j.Vertice_O.Id_v == v.Id_v && j.Vertive_D.Id_v == i.Id_v) || (j.Vertice_O.Id_v == i.Id_v && j.Vertive_D.Id_v == v.Id_v))
+                        {
+                            a = j.Peso;
+                        }
+                    }
+                }
+
+                Console.Write(" |  " + a);
+            }
+        }
+        
+        _ = Console.ReadLine();
     }
     
     
