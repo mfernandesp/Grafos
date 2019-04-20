@@ -5,7 +5,7 @@ using Grafos;
 
 namespace Grafos
 {
-    class Vertice
+    public class Vertice
     {
 
         int id_v;

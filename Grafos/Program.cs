@@ -9,6 +9,7 @@ public class Program
     static int idGrafos = 0;
     static int idVertices = 0;
     static int idArestas = 0;
+
     public static void Main()
     {
         int condicao = -1;
@@ -24,6 +25,7 @@ public class Program
             Console.WriteLine("4.Importar/Exportar Grafo");
             Console.WriteLine("0. Sair");
 
+            Console.Write("\n\nDigite a opção desejada: ");
             condicao = int.Parse(Console.ReadLine());
 
             Console.Clear();
@@ -54,16 +56,21 @@ public class Program
     private static void CriarGrafo(List<Grafo> lista_g)
     {
         Console.Clear();
-        Console.WriteLine("Digite o numero do tipo do grafo:\n1:Ponderado\n2:Dirigido\n");
-        int tipo = int.Parse(Console.ReadLine());
+        Console.WriteLine("O grafo é Ponderado?\n0: Grafo não Ponderado\n1: Grafo Ponderado");
+        Console.Write("\nDigite a opção: ");
+        int ponderado = int.Parse(Console.ReadLine());
 
-        Console.WriteLine("Digite o nome do grafo:");
+        Console.WriteLine("\n\nO grafo é Dirigido?\n0: Grafo não Dirigido\n1: Grafo Dirigido");
+        Console.Write("\nDigite a opção: ");
+        int dirigido = int.Parse(Console.ReadLine());
+
+        Console.Write("\nDigite o nome do grafo: ");
         String nome = Console.ReadLine();
-        Grafo grafo = new Grafo(nome, tipo, idGrafos++);
+        Grafo grafo = new Grafo(nome, ponderado, dirigido, idGrafos++);
         
         lista_g.Add(grafo);
 
-        Console.WriteLine("\nGrafo criado com Sucesso!");
+        Console.WriteLine("\n\nGrafo '" + grafo.Nome + "' criado com Sucesso!");
         _ = Console.ReadLine();
     }
 
@@ -76,7 +83,7 @@ public class Program
             Console.WriteLine(" " + lista_g.IndexOf(i) + " " + i.Nome);
         }
 
-        Console.WriteLine("Digite o número do grafo: ");
+        Console.Write("\n\nDigite o número do grafo: ");
         int numeroGrafo = int.Parse(Console.ReadLine());
         Console.WriteLine("\nVocê selecionou: " + lista_g[numeroGrafo].Nome);
         _ = Console.ReadLine();
@@ -87,6 +94,7 @@ public class Program
         do
         {
             Console.Clear();
+            Console.WriteLine("Grafo " + lista_g[numeroGrafo].Nome);
             Console.WriteLine("1.Inserir");
             Console.WriteLine("2.Remover");
             Console.WriteLine("3.Obter Grau");
@@ -97,14 +105,18 @@ public class Program
             Console.WriteLine("8.Verificar Caminho de Euller");
             Console.WriteLine("9.Imprimir Matriz de Adjacência");
             Console.WriteLine("0. Voltar");
-
+            
+            Console.Write("\n\nDigite a opção desejada: ");
             condicao = int.Parse(Console.ReadLine());
 
             switch (condicao)
             {
                 case 1:
-                    Console.WriteLine("Digite a opção: \n1:Vértice\n2:Aresta\n0:Voltar\n");
+                    Console.Clear();
 
+                    Console.WriteLine("Opções para adicionar: \n1:Vértice\n2:Aresta\n0:Voltar\n");
+
+                    Console.Write("Digite a opção: ");
                     int i = int.Parse(Console.ReadLine());
                     switch (i)
                     {
@@ -120,8 +132,11 @@ public class Program
                     }
                     break;
                 case 2:
-                    Console.WriteLine("Digite a opção: \n1:Vértice\n2:Aresta\n0:Voltar\n");
+                    Console.Clear();
 
+                    Console.WriteLine("Opções para remover: \n1:Vértice\n2:Aresta\n0:Voltar\n");
+
+                    Console.Write("Digite a opção: ");
                     int i2 = int.Parse(Console.ReadLine());
                     switch (i2)
                     {
@@ -137,8 +152,10 @@ public class Program
                     }
                     break;
                 case 3:
-                    Console.WriteLine("Digite a opção: \n1:Vértice\n2:Aresta\n0:Voltar\n");
+                    Console.Clear();
+                    Console.WriteLine("Opções para obter grau: \n1:Vértice\n2:Grafo\n0:Voltar\n");
 
+                    Console.Write("Digite a opção: ");
                     int i3 = int.Parse(Console.ReadLine());
                     switch (i3)
                     {
@@ -149,12 +166,12 @@ public class Program
                             GrauVertice(lista_g[numeroGrafo]);
                             break;
                         case 2:
-                            GrauAresta();
+                            GrauGrafo();
                             break;
                     }
                     break;
                 case 4:
-                    VerConexao(lista_g[numeroGrafo]);
+                    Console.Clear();
                     break;
                 case 5:
                     VerConexo();
@@ -200,12 +217,7 @@ public class Program
 
     public static void InserirVertice(Grafo grafo)
     {
-        /*
-        Console.WriteLine("Digite o numero o ID do vértice:\n");
-        int idVertice = int.Parse(Console.ReadLine());
-        */
-        Console.Clear();
-        Console.WriteLine("Digite o nome do vertice");
+        Console.Write("Digite o nome do vertice: ");
         String nomeVertice = Console.ReadLine();
 
         var listaVertices2 = grafo.ListaVertices;
@@ -216,94 +228,124 @@ public class Program
 
         grafo.ListaVertices = listaVertices2;
 
-        Console.WriteLine("\n\nVértice '" + nomeVertice + "' inserido no grafo '" + grafo.Nome "'.");
+        Console.WriteLine("\n\nVértice '" + nomeVertice + "' inserido no grafo '" + grafo.Nome + "'.");
         _ = Console.ReadLine();
     }
     public static void InserirAresta(Grafo grafo)
-    {   /*
-        Console.WriteLine("Digite o numero  id da Aresta\n");
-        int idAresta = int.Parse(Console.ReadLine());
-        */
-        Console.Clear();
-        Console.WriteLine("Digite o nome da Aresta");
+    {   
+        Console.Write("Digite o nome da Aresta: ");
         String nomeAresta = Console.ReadLine();
 
-        Console.WriteLine("Vértices: ");
+        int peso = 1;
+
+        if (grafo.Poderado == 1)
+        {
+            Console.Write("\nDigite o peso: ");
+            peso = int.Parse(Console.ReadLine());
+        }
+
+        Console.WriteLine("\nVértices: ");
         foreach (Grafos.Vertice i in grafo.ListaVertices)
         {
             Console.WriteLine(" " + grafo.ListaVertices.IndexOf(i) + " " + i.Nome);
         }
 
-        //Mudar para buscar na o id de vertices na lista de Vertices do grafo pelo nome informado, criar validação caso exista. 
-        Console.WriteLine("Digite o número do Vertice A(Origem)");
-        int idVerticeA = int.Parse(Console.ReadLine());
+        int idVerticeA = -1;
+        int idVerticeB = -1;
+        Boolean conectados = false;
 
-        Console.WriteLine("Digite o número do Vertice B(Destino)");
-        int idVerticeB = int.Parse(Console.ReadLine());
+        if (grafo.Dirigido == 1){
+            Console.Write("\nDigite o número do Vertice A(Origem): ");
+            idVerticeA = int.Parse(Console.ReadLine());
 
-        Vertice vA = grafo.ListaVertices[idVerticeA];
-        Vertice vB = grafo.ListaVertices[idVerticeB];
+            Console.Write("\nDigite o número do Vertice B(Destino): ");
+            idVerticeB = int.Parse(Console.ReadLine());
 
-        var listaAresta2 = grafo.ListaArestas;
+            conectados = VerConexaoVertice(grafo, idVerticeA, idVerticeB);
+        }
+        else{
+            Console.Write("\nDigite o número do primeiro Vertice: ");
+            idVerticeA = int.Parse(Console.ReadLine());
 
-        Aresta A = new Aresta(idArestas++, nomeAresta, grafo, vA, vB);
+            Console.Write("\nDigite o número do segundo Vertice: ");
+            idVerticeB = int.Parse(Console.ReadLine());
 
-        listaAresta2.Add(A);
+            conectados = VerConexaoVertice(grafo, idVerticeA, idVerticeB);
 
-        grafo.ListaArestas = listaAresta2;
-        _ = Console.ReadLine();
+            if (conectados == false)
+            {
+                conectados = VerConexaoVertice(grafo, idVerticeB, idVerticeA);
+            }
+        }
+
+        if (conectados)
+        {
+            Console.WriteLine("\nVértices já conectados!");
+            _ = Console.ReadLine();
+        }
+        else
+        {
+            Vertice vA = grafo.ListaVertices[idVerticeA];
+            Vertice vB = grafo.ListaVertices[idVerticeB];
+
+            var listaAresta2 = grafo.ListaArestas;
+
+            Aresta A = new Aresta(idArestas++, nomeAresta, grafo, vA, vB, peso);
+
+            listaAresta2.Add(A);
+
+            grafo.ListaArestas = listaAresta2;
+
+            Console.WriteLine("\n\nAresta '" + A.Nome + "' inserida no grafo '" + grafo.Nome + "'.");
+            _ = Console.ReadLine();
+        }
     }
     
     public static void RemoverVertice(Grafo grafo)
     {
-        Console.Clear();
-        Console.WriteLine("Vétices do grafo " + grafo.Nome +":");
+        Console.WriteLine("\nVétices do grafo " + grafo.Nome +":");
         foreach (Grafos.Vertice i in grafo.ListaVertices)
         {
             Console.WriteLine(" " + grafo.ListaVertices.IndexOf(i) + " " + i.Nome);
         }
 
-        Console.WriteLine("Digite o número do Vertice para remoção:");
+        Console.Write("\nDigite o número do Vertice para remoção: ");
         int idVerticeA = int.Parse(Console.ReadLine());
 
-        Console.WriteLine("Vértice " + grafo.ListaVertices[idVerticeA].Nome + " excluído!");
+        Console.WriteLine("\nVértice '" + grafo.ListaVertices[idVerticeA].Nome + "' excluído!");
+
+        grafo.ListaVertices.RemoveAt(idVerticeA);
+
         _ = Console.ReadLine();
-        /*
-        Console.Clear();
-        Console.WriteLine("\nInforme o vertice que deseja remover\n");
-        String rA = Console.ReadLine();
-
-        var rListaAresta = grafo.ListaArestas;
-
-        foreach (var i in rListaAresta)
-        {
-            if (i.GetNome() == rA)
-            {
-                rListaAresta.Remove(i);
-            }
-        }*/
+   
     }
     public static void RemoverAresta(Grafo grafo)
     {
-        Console.Clear();
-        Console.WriteLine("Arestas do grafo " + grafo.Nome + ":");
+        Console.WriteLine("\nArestas do grafo " + grafo.Nome + ":");
         foreach (Grafos.Aresta i in grafo.ListaArestas)
         {
             Console.WriteLine(" " + grafo.ListaArestas.IndexOf(i) + " " + i.Nome);
         }
 
-        Console.WriteLine("Digite o número da Aresta para remoção:");
+        Console.WriteLine("\nDigite o número da Aresta para remoção:");
         int idVerticeA = int.Parse(Console.ReadLine());
 
-        Console.WriteLine("Aresta " + grafo.ListaArestas[idVerticeA].Nome + " excluída!");
+        Console.WriteLine("\nAresta '" + grafo.ListaArestas[idVerticeA].Nome + "' excluída!");
+
+        grafo.ListaArestas.RemoveAt(idVerticeA);
+
         _ = Console.ReadLine();
     }
     
     public static void GrauVertice(Grafo grafo)
-    {
-        Console.Clear();
-        Console.Write("Informe o nome do vértice:");
-        String nG = Console.ReadLine();
+    {   Console.WriteLine("\nVétices do grafo " + grafo.Nome + ":");
+        foreach (Grafos.Vertice i in grafo.ListaVertices)
+        {
+            Console.WriteLine(" " + grafo.ListaVertices.IndexOf(i) + " " + i.Nome);
+        }
+
+        Console.Write("\nDigite o número do Vertice: ");
+        int idVerticeA = int.Parse(Console.ReadLine());
 
         var cGrau = grafo.ListaArestas;
 
@@ -311,52 +353,93 @@ public class Program
 
         foreach (var i in cGrau)
         {
-            if (i.Vertive_D.Nome == nG || i.Vertice_O.Nome == nG)
+            if (i.Vertive_D.Id_v == idVerticeA || i.Vertice_O.Id_v == idVerticeA)
             {
                 g++;
             }
         }
 
-        Console.WriteLine("\nGrau de " + nG + " é: " + g);
-
-        Console.WriteLine("\n\n\n Voltar ao menu?");
-        String teste2 = Console.ReadLine();
+        Console.WriteLine("\nGrau de '" + grafo.ListaVertices[idVerticeA].Nome + "' é: " + g);
+        
         _ = Console.ReadLine();
     }
-    public static void GrauAresta()
+    public static void GrauGrafo()
     {
         Console.Clear();
 
-        Console.WriteLine("Grau Aresta");
+        Console.WriteLine("Grau Grafo");
 
         _ = Console.ReadLine();
     }
 
     public static void VerConexao(Grafo grafo)
     {
-        Console.Clear();
-        Console.WriteLine("\nInforme os vertices que deseja verificar conexão: ");
-        Console.WriteLine("\nVertice Origem: ");
-        String nVerticeO = Console.ReadLine();
 
-        Console.WriteLine("\nVertice Destino: ");
-        String nVerticeD = Console.ReadLine();
-
-        var lC = grafo.ListaArestas;
-
-        bool z = false;
-
-        foreach (var i in lC)
+        Console.WriteLine("\nVértices: ");
+        foreach (Grafos.Vertice i in grafo.ListaVertices)
         {
-            if ((i.Vertice_O.Nome == nVerticeO && i.Vertive_D.Nome == nVerticeD) || (i.Vertice_O.Nome == nVerticeD && i.Vertive_D.Nome == nVerticeO))
+            Console.WriteLine(" " + grafo.ListaVertices.IndexOf(i) + " " + i.Nome);
+        }
+
+        int idVerticeA = -1;
+        int idVerticeB = -1;
+        Boolean conectados = false;
+
+        if (grafo.Dirigido == 1)
+        {
+            Console.Write("\nDigite o número do Vertice A(Origem): ");
+            idVerticeA = int.Parse(Console.ReadLine());
+
+            Console.Write("\nDigite o número do Vertice B(Destino): ");
+            idVerticeB = int.Parse(Console.ReadLine());
+
+            conectados = VerConexaoVertice(grafo, idVerticeA, idVerticeB);
+        }
+        else
+        {
+            Console.Write("\nDigite o número do primeiro Vertice: ");
+            idVerticeA = int.Parse(Console.ReadLine());
+
+            Console.Write("\nDigite o número do segundo Vertice: ");
+            idVerticeB = int.Parse(Console.ReadLine());
+
+            conectados = VerConexaoVertice(grafo, idVerticeA, idVerticeB);
+
+            if (conectados == false)
             {
-
-
+                conectados = VerConexaoVertice(grafo, idVerticeB, idVerticeA);
             }
         }
 
-        _= Console.ReadLine();
+        if (conectados)
+        {
+            Console.WriteLine("\nVértices estão conectados.");
+            _ = Console.ReadLine();
+        }
+        else {
+            Console.WriteLine("\nVértices não estão conectados.");
+            _ = Console.ReadLine();
+        }
     }
+
+    public static Boolean VerConexaoVertice(Grafo grafo, int id_origem, int id_destino)
+    {
+        Boolean conectados = false;
+        var listaAresta = grafo.ListaArestas;
+
+
+        foreach (var i in listaAresta)
+        {
+            if ((i.Vertice_O.Id_v == id_origem && i.Vertive_D.Id_v == id_destino))
+            {
+                conectados = true;
+            }
+        }
+
+        return conectados;
+    }
+
+
     public static void VerConexo()
     {
 
@@ -375,7 +458,7 @@ public class Program
 
     }
     
-
+    
 
 
 }
