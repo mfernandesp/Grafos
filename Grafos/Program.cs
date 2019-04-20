@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using Grafos;
@@ -172,6 +173,7 @@ public class Program
                     break;
                 case 4:
                     Console.Clear();
+                    VerConexao(lista_g[numeroGrafo]);
                     break;
                 case 5:
                     VerConexo();
@@ -213,7 +215,172 @@ public class Program
     {
         Console.WriteLine("Selecione a opção:\n1:Exportar\n2:Importar\n");
 
+        Console.Write("Digite a opção: ");
+        int opcao = int.Parse(Console.ReadLine());
+
+        switch (opcao)
+        {
+            case 1:
+                Exportar(lista_g);
+                break;
+            case 2:
+                Importar(lista_g);
+                break;
+        }
+
+
         _ = Console.ReadLine();
+    }
+
+    public static void Exportar(List<Grafo> lista_g)
+    {
+        List<String> textoArquivo = new List<String>();
+
+        // Create a string array with the lines of text
+        //string[] lines = { "First line", "Second line", "Third line" };
+        foreach (var i in lista_g)
+        {
+            String textoGrafo = "Grafo = " + i.Nome + "," + i.Poderado + "," + i.Dirigido ;
+            textoArquivo.Add(textoGrafo);
+
+            foreach(var j in i.ListaVertices)
+            {
+                String textoVertice = "Vertice = " + j.Nome + "," + i.Nome;
+                textoArquivo.Add(textoVertice);
+            }
+
+            foreach (var m in i.ListaArestas)
+            {
+                String textoAresta = "Aresta = " + m.Nome + "," + i.Nome + "," + m.Vertice_O.Nome + "," + m.Vertive_D.Nome + "," + m.Peso;
+                textoArquivo.Add(textoAresta);
+            }
+        }
+
+        foreach(var line in textoArquivo)
+        {
+            Console.WriteLine(line);
+        }
+
+        // Set a variable to the Documents path.
+        string docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+        // Write the string array to a new file named "WriteLines.txt".
+        using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "Grafos.txt")))
+        {
+            foreach (var line in textoArquivo)
+            {
+                outputFile.WriteLine(line);
+            }
+        }
+
+        Console.WriteLine("\nGrafo(s) exportado(s) com sucesso!");
+        _ = Console.ReadLine();
+
+    }
+    public static void Importar(List<Grafo> lista_g)
+    {
+
+        Console.Write("Digite o caminho do arquivo .txt : ");
+        String caminho = Console.ReadLine();
+        List<String> textoArquivo = new List<String>();
+
+        try
+        {   // Open the text file using a stream reader.
+            using (StreamReader sr = new StreamReader(caminho))
+            {
+                string line;
+                // Read and display lines from the file until the end of 
+                // the file is reached.
+                while ((line = sr.ReadLine()) != null)
+                {
+                    textoArquivo.Add(line);
+                }
+            }
+        }
+        catch (IOException e)
+        {
+            Console.WriteLine("Erro ao ler arquivo.\n");
+            Console.WriteLine(e.Message);
+            _ = Console.ReadLine();
+        }
+
+
+        foreach (var line in textoArquivo)
+        {
+            if(line.StartsWith("Grafo = "))
+            {
+               
+               String linhaGrafo = line.Replace("Grafo = ", "");
+               String[] propriedades = linhaGrafo.Split(new Char[] {','});
+
+                int ponderado = int.Parse(propriedades[1]);
+                int dirigido = int.Parse(propriedades[1]);
+
+               Grafo grafo = new Grafo(propriedades[0], ponderado, dirigido, idGrafos++);
+               lista_g.Add(grafo);
+
+                Console.WriteLine("\nGrafo '" + grafo.Nome + "' criado com Sucesso!");
+            }
+
+            if (line.StartsWith("Vertice = "))
+            {
+                String linhaGrafo = line.Replace("Vertice = ", "");
+                String[] propriedades = linhaGrafo.Split(new Char[] { ',' });
+
+                foreach(var grafo in lista_g)
+                {
+                    if (grafo.Nome.Equals(propriedades[1]))
+                    {
+                        
+                        Vertice V = new Grafos.Vertice(idVertices++, propriedades[0], grafo);
+
+                        grafo.ListaVertices.Add(V);
+
+                        Console.WriteLine("Vértice '" + V.Nome + "' inserido no grafo '" + grafo.Nome + "' com sucesso!");
+
+                    }
+                }
+
+
+
+            }
+
+            if (line.StartsWith("Aresta = "))
+            {
+                String linhaGrafo = line.Replace("Aresta = ", "");
+                String[] propriedades = linhaGrafo.Split(new Char[] { ',' });
+
+                foreach (var grafo in lista_g)
+                {
+                    if (grafo.Nome.Equals(propriedades[1]))
+                    {
+                        foreach(var verO in grafo.ListaVertices)
+                        {
+                            if (verO.Nome.Equals(propriedades[2]))
+                            {
+                                Vertice vO = verO;
+                                foreach (var verD in grafo.ListaVertices)
+                                {
+                                    if (verD.Nome.Equals(propriedades[3]))
+                                    {
+                                        Vertice vD = verD;
+                                        int peso = int.Parse(propriedades[4]);
+
+                                        Aresta A = new Aresta(idArestas++, propriedades[0], grafo, vO, vD, peso);
+                                        grafo.ListaArestas.Add(A);
+
+                                        Console.WriteLine("Aresta '" + A.Nome + "' inserida no grafo '" + grafo.Nome + "'com sucesso!");
+                                    }                                    
+                                }
+                            }
+                        }
+
+                    }
+                }
+                
+            }
+
+        }
     }
 
     public static void InserirVertice(Grafo grafo)
@@ -440,7 +607,6 @@ public class Program
         return conectados;
     }
 
-
     public static void VerConexo()
     {
 
@@ -465,7 +631,8 @@ public class Program
             Console.Write(" | " + i.Nome);
         }
 
-        foreach(var v in listaVertice)
+
+        foreach (var v in listaVertice)
         {
             Console.Write("\n" + v.Nome);
 
