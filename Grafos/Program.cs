@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using Grafos;
+using System.Linq;
 
 public class Program
 {
@@ -36,7 +37,6 @@ public class Program
                 case 1:
                     CriarGrafo(lista_g);
                     break;
-
                 case 2:
                     SelecionarGrafo(lista_g);
                     break;
@@ -179,13 +179,13 @@ public class Program
                     VerConexo();
                     break;
                 case 6:
-                    VerConexo();
+                    VerticesAdjacentes(lista_g[numeroGrafo]);
                     break;
                 case 7:
-                    VerAdjacente();
+                    VerMatrizAdjacente();
                     break;
                 case 8:
-                    VerEuller();
+                    VerEuller(lista_g[numeroGrafo]);
                     break;
                 case 9:
                     Console.Clear();
@@ -429,7 +429,7 @@ public class Program
             Console.Write("\nDigite o número do Vertice B(Destino): ");
             idVerticeB = int.Parse(Console.ReadLine());
 
-            conectados = VerConexaoVertice(grafo, idVerticeA, idVerticeB);
+            conectados = grafo.PossuiConexaoEntreOsVertices(idVerticeA, idVerticeB);
         }
         else{
             Console.Write("\nDigite o número do primeiro Vertice: ");
@@ -438,11 +438,11 @@ public class Program
             Console.Write("\nDigite o número do segundo Vertice: ");
             idVerticeB = int.Parse(Console.ReadLine());
 
-            conectados = VerConexaoVertice(grafo, idVerticeA, idVerticeB);
+            conectados = grafo.PossuiConexaoEntreOsVertices(idVerticeA, idVerticeB);
 
             if (conectados == false)
             {
-                conectados = VerConexaoVertice(grafo, idVerticeB, idVerticeA);
+                conectados = grafo.PossuiConexaoEntreOsVertices(idVerticeB, idVerticeA);
             }
         }
 
@@ -504,33 +504,34 @@ public class Program
 
         _ = Console.ReadLine();
     }
-    
+
     public static void GrauVertice(Grafo grafo)
-    {   Console.WriteLine("\nVétices do grafo " + grafo.Nome + ":");
-        foreach (Grafos.Vertice i in grafo.ListaVertices)
-        {
-            Console.WriteLine(" " + grafo.ListaVertices.IndexOf(i) + " " + i.Nome);
-        }
-
-        Console.Write("\nDigite o número do Vertice: ");
-        int idVerticeA = int.Parse(Console.ReadLine());
-
-        var cGrau = grafo.ListaArestas;
-
-        int g = 0;
-
-        foreach (var i in cGrau)
-        {
-            if (i.Vertive_D.Id_v == idVerticeA || i.Vertice_O.Id_v == idVerticeA)
-            {
-                g++;
-            }
-        }
-
-        Console.WriteLine("\nGrau de '" + grafo.ListaVertices[idVerticeA].Nome + "' é: " + g);
-        
+    {
+        var verticeSelecionado = Program.GetVerticeFromInput(grafo);
+        Console.WriteLine("\nGrau de '" + verticeSelecionado.Nome + "' é: " + verticeSelecionado.Grau);
         _ = Console.ReadLine();
     }
+
+    public static void VerticesAdjacentes(Grafo grafo)
+    {
+        var verticeSelecionado = Program.GetVerticeFromInput(grafo);
+        foreach (var verticeAdjacente in verticeSelecionado.ListVerticesAdjacentes.ToList())
+        {
+            Console.WriteLine("\nVertice Adjacente: " + verticeAdjacente.Nome);
+        }
+        _ = Console.ReadLine();
+    }
+
+    public static Vertice GetVerticeFromInput(Grafo grafo)
+    {
+        Console.WriteLine("\nVétices do grafo " + grafo.Nome + ":");
+        foreach (Grafos.Vertice i in grafo.ListaVertices)
+            Console.WriteLine(" " + grafo.ListaVertices.IndexOf(i) + " " + i.Nome);
+        Console.Write("\nDigite o número do Vertice: ");
+        int idVerticeA = int.Parse(Console.ReadLine());
+        return grafo.ListaVertices[idVerticeA];
+    }
+
     public static void GrauGrafo()
     {
         Console.Clear();
@@ -561,7 +562,7 @@ public class Program
             Console.Write("\nDigite o número do Vertice B(Destino): ");
             idVerticeB = int.Parse(Console.ReadLine());
 
-            conectados = VerConexaoVertice(grafo, idVerticeA, idVerticeB);
+            conectados = grafo.PossuiConexaoEntreOsVertices(idVerticeA, idVerticeB);
         }
         else
         {
@@ -571,11 +572,11 @@ public class Program
             Console.Write("\nDigite o número do segundo Vertice: ");
             idVerticeB = int.Parse(Console.ReadLine());
 
-            conectados = VerConexaoVertice(grafo, idVerticeA, idVerticeB);
+            conectados = grafo.PossuiConexaoEntreOsVertices(idVerticeA, idVerticeB);
 
             if (conectados == false)
             {
-                conectados = VerConexaoVertice(grafo, idVerticeB, idVerticeA);
+                conectados = grafo.PossuiConexaoEntreOsVertices(idVerticeB, idVerticeA);
             }
         }
 
@@ -590,34 +591,20 @@ public class Program
         }
     }
 
-    public static Boolean VerConexaoVertice(Grafo grafo, int id_origem, int id_destino)
-    {
-        Boolean conectados = false;
-        var listaAresta = grafo.ListaArestas;
-
-
-        foreach (var i in listaAresta)
-        {
-            if ((i.Vertice_O.Id_v == id_origem && i.Vertive_D.Id_v == id_destino))
-            {
-                conectados = true;
-            }
-        }
-
-        return conectados;
-    }
-
     public static void VerConexo()
     {
 
     }
-    public static void VerAdjacente()
+
+    public static void VerMatrizAdjacente()
     {
 
     }
-    public static void VerEuller()
-    {
 
+    public static void VerEuller(Grafo grafo)
+    {
+        var strResposta = grafo.PossuiCaminhoEuleriano ? "" : "não ";
+        Console.WriteLine($"O grafo {strResposta}possui caminho euleriano");
     }
 
     public static void MatrizAdjacencia(Grafo grafo)
