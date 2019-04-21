@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using Grafos;
+using System.Linq;
 
 public class Program
 {
@@ -36,7 +37,6 @@ public class Program
                 case 1:
                     CriarGrafo(lista_g);
                     break;
-
                 case 2:
                     SelecionarGrafo(lista_g);
                     break;
@@ -179,7 +179,7 @@ public class Program
                     VerConexo();
                     break;
                 case 6:
-                    VerConexo();
+                    VerticesAdjacentes(lista_g[numeroGrafo]);
                     break;
                 case 7:
                     VerAdjacente();
@@ -504,33 +504,34 @@ public class Program
 
         _ = Console.ReadLine();
     }
-    
+
     public static void GrauVertice(Grafo grafo)
-    {   Console.WriteLine("\nVétices do grafo " + grafo.Nome + ":");
-        foreach (Grafos.Vertice i in grafo.ListaVertices)
-        {
-            Console.WriteLine(" " + grafo.ListaVertices.IndexOf(i) + " " + i.Nome);
-        }
-
-        Console.Write("\nDigite o número do Vertice: ");
-        int idVerticeA = int.Parse(Console.ReadLine());
-
-        var cGrau = grafo.ListaArestas;
-
-        int g = 0;
-
-        foreach (var i in cGrau)
-        {
-            if (i.Vertive_D.Id_v == idVerticeA || i.Vertice_O.Id_v == idVerticeA)
-            {
-                g++;
-            }
-        }
-
-        Console.WriteLine("\nGrau de '" + grafo.ListaVertices[idVerticeA].Nome + "' é: " + g);
-        
+    {
+        var verticeSelecionado = Program.GetVerticeFromInput(grafo);
+        Console.WriteLine("\nGrau de '" + verticeSelecionado.Nome + "' é: " + verticeSelecionado.Grau);
         _ = Console.ReadLine();
     }
+
+    public static void VerticesAdjacentes(Grafo grafo)
+    {
+        var verticeSelecionado = Program.GetVerticeFromInput(grafo);
+        foreach (var verticeAdjacente in verticeSelecionado.ListVerticesAdjacentes.ToList())
+        {
+            Console.WriteLine("\nVertice Adjacente: " + verticeAdjacente.Nome);
+        }
+        _ = Console.ReadLine();
+    }
+
+    public static Vertice GetVerticeFromInput(Grafo grafo)
+    {
+        Console.WriteLine("\nVétices do grafo " + grafo.Nome + ":");
+        foreach (Grafos.Vertice i in grafo.ListaVertices)
+            Console.WriteLine(" " + grafo.ListaVertices.IndexOf(i) + " " + i.Nome);
+        Console.Write("\nDigite o número do Vertice: ");
+        int idVerticeA = int.Parse(Console.ReadLine());
+        return grafo.ListaVertices[idVerticeA];
+    }
+
     public static void GrauGrafo()
     {
         Console.Clear();
