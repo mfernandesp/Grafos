@@ -182,10 +182,10 @@ public class Program
                     VerticesAdjacentes(lista_g[numeroGrafo]);
                     break;
                 case 7:
-                    VerAdjacente();
+                    VerMatrizAdjacente();
                     break;
                 case 8:
-                    VerEuller();
+                    VerEuller(lista_g[numeroGrafo]);
                     break;
                 case 9:
                     Console.Clear();
@@ -612,13 +612,16 @@ public class Program
     {
 
     }
-    public static void VerAdjacente()
+
+    public static void VerMatrizAdjacente()
     {
 
     }
-    public static void VerEuller()
-    {
 
+    public static void VerEuller(Grafo grafo)
+    {
+        var strResposta = grafo.PossuiCaminhoEuleriano ? "" : "não ";
+        Console.WriteLine($"O grafo {strResposta}possui caminho euleriano");
     }
 
     public static void MatrizAdjacencia(Grafo grafo)

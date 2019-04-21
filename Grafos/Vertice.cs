@@ -21,7 +21,7 @@ namespace Grafos
         {
             get
             {
-                return this.Grafo.ListaArestas.Where(q => q.Vertice_O.Id_v == this.Id_v || q.Vertive_D == this).Count();
+                return this.ListVerticesAdjacentes.Count();
             }
         }
 
