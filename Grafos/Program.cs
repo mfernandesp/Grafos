@@ -429,7 +429,7 @@ public class Program
             Console.Write("\nDigite o número do Vertice B(Destino): ");
             idVerticeB = int.Parse(Console.ReadLine());
 
-            conectados = VerConexaoVertice(grafo, idVerticeA, idVerticeB);
+            conectados = grafo.PossuiConexaoEntreOsVertices(idVerticeA, idVerticeB);
         }
         else{
             Console.Write("\nDigite o número do primeiro Vertice: ");
@@ -438,11 +438,11 @@ public class Program
             Console.Write("\nDigite o número do segundo Vertice: ");
             idVerticeB = int.Parse(Console.ReadLine());
 
-            conectados = VerConexaoVertice(grafo, idVerticeA, idVerticeB);
+            conectados = grafo.PossuiConexaoEntreOsVertices(idVerticeA, idVerticeB);
 
             if (conectados == false)
             {
-                conectados = VerConexaoVertice(grafo, idVerticeB, idVerticeA);
+                conectados = grafo.PossuiConexaoEntreOsVertices(idVerticeB, idVerticeA);
             }
         }
 
@@ -562,7 +562,7 @@ public class Program
             Console.Write("\nDigite o número do Vertice B(Destino): ");
             idVerticeB = int.Parse(Console.ReadLine());
 
-            conectados = VerConexaoVertice(grafo, idVerticeA, idVerticeB);
+            conectados = grafo.PossuiConexaoEntreOsVertices(idVerticeA, idVerticeB);
         }
         else
         {
@@ -572,11 +572,11 @@ public class Program
             Console.Write("\nDigite o número do segundo Vertice: ");
             idVerticeB = int.Parse(Console.ReadLine());
 
-            conectados = VerConexaoVertice(grafo, idVerticeA, idVerticeB);
+            conectados = grafo.PossuiConexaoEntreOsVertices(idVerticeA, idVerticeB);
 
             if (conectados == false)
             {
-                conectados = VerConexaoVertice(grafo, idVerticeB, idVerticeA);
+                conectados = grafo.PossuiConexaoEntreOsVertices(idVerticeB, idVerticeA);
             }
         }
 
@@ -589,23 +589,6 @@ public class Program
             Console.WriteLine("\nVértices não estão conectados.");
             _ = Console.ReadLine();
         }
-    }
-
-    public static Boolean VerConexaoVertice(Grafo grafo, int id_origem, int id_destino)
-    {
-        Boolean conectados = false;
-        var listaAresta = grafo.ListaArestas;
-
-
-        foreach (var i in listaAresta)
-        {
-            if ((i.Vertice_O.Id_v == id_origem && i.Vertive_D.Id_v == id_destino))
-            {
-                conectados = true;
-            }
-        }
-
-        return conectados;
     }
 
     public static void VerConexo()
