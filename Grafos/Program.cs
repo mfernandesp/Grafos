@@ -28,7 +28,16 @@ public class Program
             Console.WriteLine("0. Sair");
 
             Console.Write("\n\nDigite a opção desejada: ");
-            condicao = int.Parse(Console.ReadLine());
+            try
+            {
+                condicao = int.Parse(Console.ReadLine());
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Por favor, insira um valor disponível no menu.");
+                _ = Console.ReadLine();
+                condicao = Int32.MinValue;
+            }
 
             Console.Clear();
 
@@ -108,7 +117,16 @@ public class Program
             Console.WriteLine("0. Voltar");
             
             Console.Write("\n\nDigite a opção desejada: ");
-            condicao = int.Parse(Console.ReadLine());
+            try
+            {
+                condicao = int.Parse(Console.ReadLine());
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Por favor, insira um valor disponível no menu.");
+                _ = Console.ReadLine();
+                condicao = Int32.MinValue;
+            }
 
             switch (condicao)
             {
@@ -167,7 +185,7 @@ public class Program
                             GrauVertice(lista_g[numeroGrafo]);
                             break;
                         case 2:
-                            GrauGrafo();
+                            GrauGrafo(lista_g[numeroGrafo]);
                             break;
                     }
                     break;
@@ -176,7 +194,7 @@ public class Program
                     VerConexao(lista_g[numeroGrafo]);
                     break;
                 case 5:
-                    VerConexo();
+                    VerConexo(lista_g[numeroGrafo]);
                     break;
                 case 6:
                     VerticesAdjacentes(lista_g[numeroGrafo]);
@@ -439,11 +457,6 @@ public class Program
             idVerticeB = int.Parse(Console.ReadLine());
 
             conectados = grafo.PossuiConexaoEntreOsVertices(idVerticeA, idVerticeB);
-
-            if (conectados == false)
-            {
-                conectados = grafo.PossuiConexaoEntreOsVertices(idVerticeB, idVerticeA);
-            }
         }
 
         if (conectados)
@@ -532,11 +545,10 @@ public class Program
         return grafo.ListaVertices[idVerticeA];
     }
 
-    public static void GrauGrafo()
+    public static void GrauGrafo(Grafo grafo)
     {
-        Console.Clear();
-
-        Console.WriteLine("Grau Grafo");
+        var grauGrafo = grafo.Grau;
+        Console.WriteLine(grauGrafo > 0 ? $"Grau do Grafo é {grauGrafo}" : "O grafo não é regular e portanto não é possível obter o seu grau");
 
         _ = Console.ReadLine();
     }
@@ -573,11 +585,6 @@ public class Program
             idVerticeB = int.Parse(Console.ReadLine());
 
             conectados = grafo.PossuiConexaoEntreOsVertices(idVerticeA, idVerticeB);
-
-            if (conectados == false)
-            {
-                conectados = grafo.PossuiConexaoEntreOsVertices(idVerticeB, idVerticeA);
-            }
         }
 
         if (conectados)
@@ -591,9 +598,12 @@ public class Program
         }
     }
 
-    public static void VerConexo()
+    public static void VerConexo(Grafo grafo)
     {
+        var strResposta = grafo.Conexo ? "" : "não ";
+        Console.WriteLine($"O grafo {strResposta}é conexo");
 
+        _ = Console.ReadLine();
     }
 
     public static void VerMatrizAdjacente()
@@ -605,6 +615,8 @@ public class Program
     {
         var strResposta = grafo.PossuiCaminhoEuleriano ? "" : "não ";
         Console.WriteLine($"O grafo {strResposta}possui caminho euleriano");
+
+        _ = Console.ReadLine();
     }
 
     public static void MatrizAdjacencia(Grafo grafo)

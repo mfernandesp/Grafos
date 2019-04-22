@@ -21,7 +21,8 @@ namespace Grafos
         public int Dirigido { get => dirigido; set => dirigido = value; }
 
         public bool PossuiConexaoEntreOsVertices(int idOrigem, int idDestino)
-            => this.ListaArestas.Any(aresta => aresta.Vertice_O.Id_v == idOrigem && aresta.Vertive_D.Id_v == idDestino);
+            => this.ListaArestas.Any(aresta => (aresta.Vertice_O.Id_v == idOrigem && aresta.Vertive_D.Id_v == idDestino)
+                                                || (this.Dirigido == 0 && aresta.Vertice_O.Id_v == idDestino && aresta.Vertive_D.Id_v == idOrigem));
 
         public bool Conexo
         {
@@ -40,11 +41,24 @@ namespace Grafos
             }
         }
 
+        public int Grau
+        {
+            get
+            {
+                var grauVertice = this.ListaVertices.FirstOrDefault()?.Grau ?? -1;
+                if (grauVertice != -1)
+                {
+                    return !this.ListaVertices.Any(vertice => vertice.Grau != grauVertice) ? grauVertice : 0;
+                }
+                return 0;
+            }
+        }
+
         public bool PossuiCaminhoEuleriano
         {
             get
             {
-                return (this.Dirigido == 1) && this.Conexo && (this.CountVerticesGrauImpar == 0 || this.CountVerticesGrauImpar == 2);
+                return (this.Dirigido == 0) && this.Conexo && (this.CountVerticesGrauImpar == 0 || this.CountVerticesGrauImpar == 2);
             }
         }
 
