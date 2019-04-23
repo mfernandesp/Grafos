@@ -39,21 +39,29 @@ public class Program
                 condicao = Int32.MinValue;
             }
 
-            Console.Clear();
+            
 
             switch (condicao)
             {
                 case 1:
+                    Console.Clear();
                     CriarGrafo(lista_g);
                     break;
                 case 2:
+                    Console.Clear();
                     SelecionarGrafo(lista_g);
                     break;
                 case 3:
+                    Console.Clear();
                     RemoverGrafo(lista_g);
                     break;
                 case 4:
+                    Console.Clear();
                     ImportarExportar(lista_g);
+                    break;
+                default:
+                    Console.WriteLine("Por favor, insira um valor disponível no menu.");
+                    _ = Console.ReadLine();
                     break;
             }
 
@@ -70,18 +78,38 @@ public class Program
         Console.Write("\nDigite a opção: ");
         int ponderado = int.Parse(Console.ReadLine());
 
-        Console.WriteLine("\n\nO grafo é Dirigido?\n0: Grafo não Dirigido\n1: Grafo Dirigido");
-        Console.Write("\nDigite a opção: ");
-        int dirigido = int.Parse(Console.ReadLine());
+        if (ponderado != 1 && ponderado != 0){
+            Console.WriteLine("Por favor, insira um valor disponível no menu.");
+            _ = Console.ReadLine();
+            CriarGrafo(lista_g);
+        }
+        else
+        {
+            Console.WriteLine("\n\nO grafo é Dirigido?\n0: Grafo não Dirigido\n1: Grafo Dirigido");
+            Console.Write("\nDigite a opção: ");
+            int dirigido = int.Parse(Console.ReadLine());
 
-        Console.Write("\nDigite o nome do grafo: ");
-        String nome = Console.ReadLine();
-        Grafo grafo = new Grafo(nome, ponderado, dirigido, idGrafos++);
+            if (dirigido != 1 && dirigido != 0)
+            {
+                Console.WriteLine("Por favor, insira um valor disponível no menu.");
+                _ = Console.ReadLine();
+                CriarGrafo(lista_g);
+            }
+            else
+            {
+                Console.Write("\nDigite o nome do grafo: ");
+                String nome = Console.ReadLine();
+                Grafo grafo = new Grafo(nome, ponderado, dirigido, idGrafos++);
+
+                lista_g.Add(grafo);
+
+                Console.WriteLine("\n\nGrafo '" + grafo.Nome + "' criado com Sucesso!");
+                _ = Console.ReadLine();
+            }            
+
+        }
+
         
-        lista_g.Add(grafo);
-
-        Console.WriteLine("\n\nGrafo '" + grafo.Nome + "' criado com Sucesso!");
-        _ = Console.ReadLine();
     }
 
     private static void SelecionarGrafo(List<Grafo> lista_g)
@@ -92,125 +120,157 @@ public class Program
         {
             Console.WriteLine(" " + lista_g.IndexOf(i) + " " + i.Nome);
         }
-
+        
         Console.Write("\n\nDigite o número do grafo: ");
         int numeroGrafo = int.Parse(Console.ReadLine());
+
+        /*
         Console.WriteLine("\nVocê selecionou: " + lista_g[numeroGrafo].Nome);
         _ = Console.ReadLine();
         Console.Clear();
+        */
 
-        int condicao = -1;
-
-        do
+        try
         {
+            Console.WriteLine("\nVocê selecionou: " + lista_g[numeroGrafo].Nome);
+            _ = Console.ReadLine();
             Console.Clear();
-            Console.WriteLine("Grafo " + lista_g[numeroGrafo].Nome);
-            Console.WriteLine("1.Inserir");
-            Console.WriteLine("2.Remover");
-            Console.WriteLine("3.Obter Grau");
-            Console.WriteLine("4.Verificar Conexão entre Vértices");
-            Console.WriteLine("5.Verificar se o grafo é conexo");
-            Console.WriteLine("6.Obter Vertices Adjacentes");
-            Console.WriteLine("7.Imprimir Matriz de Adjacencia");
-            Console.WriteLine("8.Verificar Caminho de Euller");
-            Console.WriteLine("9.Imprimir Matriz de Adjacência");
-            Console.WriteLine("0. Voltar");
-            
-            Console.Write("\n\nDigite a opção desejada: ");
-            try
+
+
+            int condicao = -1;
+
+            do
             {
-                condicao = int.Parse(Console.ReadLine());
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Por favor, insira um valor disponível no menu.");
-                _ = Console.ReadLine();
-                condicao = Int32.MinValue;
-            }
+                Console.Clear();
+                Console.WriteLine("Grafo " + lista_g[numeroGrafo].Nome);
+                Console.WriteLine("1.Inserir");
+                Console.WriteLine("2.Remover");
+                Console.WriteLine("3.Obter Grau");
+                Console.WriteLine("4.Verificar Conexão entre Vértices");
+                Console.WriteLine("5.Verificar se o grafo é conexo");
+                Console.WriteLine("6.Obter Vertices Adjacentes");
+                Console.WriteLine("7.Imprimir Matriz de Adjacencia");
+                Console.WriteLine("8.Verificar Caminho de Euller");
+                Console.WriteLine("0. Voltar");
 
-            switch (condicao)
-            {
-                case 1:
-                    Console.Clear();
+                Console.Write("\n\nDigite a opção desejada: ");
+                try
+                {
+                    condicao = int.Parse(Console.ReadLine());
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Por favor, insira um valor disponível no menu.");
+                    _ = Console.ReadLine();
+                    condicao = Int32.MinValue;
+                }
 
-                    Console.WriteLine("Opções para adicionar: \n1:Vértice\n2:Aresta\n0:Voltar\n");
+                switch (condicao)
+                {
+                    case 1:
+                        Console.Clear();
 
-                    Console.Write("Digite a opção: ");
-                    int i = int.Parse(Console.ReadLine());
-                    switch (i)
-                    {
-                        case 0:
-                            SelecionarGrafo(lista_g);
-                            break;
-                        case 1:
-                            InserirVertice(lista_g[numeroGrafo]);
-                            break;
-                        case 2:
-                            InserirAresta(lista_g[numeroGrafo]);
-                            break;
-                    }
-                    break;
-                case 2:
-                    Console.Clear();
+                        Console.WriteLine("Opções para adicionar: \n1:Vértice\n2:Aresta\n0:Voltar\n");
 
-                    Console.WriteLine("Opções para remover: \n1:Vértice\n2:Aresta\n0:Voltar\n");
+                        Console.Write("Digite a opção: ");
+                        int i = int.Parse(Console.ReadLine());
+                        switch (i)
+                        {
+                            case 0:
+                                SelecionarGrafo(lista_g);
+                                break;
+                            case 1:
+                                InserirVertice(lista_g[numeroGrafo]);
+                                break;
+                            case 2:
+                                InserirAresta(lista_g[numeroGrafo]);
+                                break;
+                            default:
+                                Console.WriteLine("Por favor, insira um valor disponível no menu.");
+                                _ = Console.ReadLine();
+                                break;
+                        }
+                        break;
+                    case 2:
+                        Console.Clear();
 
-                    Console.Write("Digite a opção: ");
-                    int i2 = int.Parse(Console.ReadLine());
-                    switch (i2)
-                    {
-                        case 0:
-                            SelecionarGrafo(lista_g);
-                            break;
-                        case 1:
-                            RemoverVertice(lista_g[numeroGrafo]);
-                            break;
-                        case 2:
-                            RemoverAresta(lista_g[numeroGrafo]);
-                            break;
-                    }
-                    break;
-                case 3:
-                    Console.Clear();
-                    Console.WriteLine("Opções para obter grau: \n1:Vértice\n2:Grafo\n0:Voltar\n");
+                        Console.WriteLine("Opções para remover: \n1:Vértice\n2:Aresta\n0:Voltar\n");
 
-                    Console.Write("Digite a opção: ");
-                    int i3 = int.Parse(Console.ReadLine());
-                    switch (i3)
-                    {
-                        case 0:
-                            SelecionarGrafo(lista_g);
-                            break;
-                        case 1:
-                            GrauVertice(lista_g[numeroGrafo]);
-                            break;
-                        case 2:
-                            GrauGrafo(lista_g[numeroGrafo]);
-                            break;
-                    }
-                    break;
-                case 4:
-                    Console.Clear();
-                    VerConexao(lista_g[numeroGrafo]);
-                    break;
-                case 5:
-                    VerConexo(lista_g[numeroGrafo]);
-                    break;
-                case 6:
-                    VerticesAdjacentes(lista_g[numeroGrafo]);
-                    break;
-                case 7:
-                    VerMatrizAdjacente();
-                    break;
-                case 8:
-                    VerEuller(lista_g[numeroGrafo]);
-                    break;
-                case 9:
-                    Console.Clear();
-                    MatrizAdjacencia(lista_g[numeroGrafo]);
-                    break;
-            }
-        } while (condicao != 0);
+                        Console.Write("Digite a opção: ");
+                        int i2 = int.Parse(Console.ReadLine());
+                        switch (i2)
+                        {
+                            case 0:
+                                SelecionarGrafo(lista_g);
+                                break;
+                            case 1:
+                                RemoverVertice(lista_g[numeroGrafo]);
+                                break;
+                            case 2:
+                                RemoverAresta(lista_g[numeroGrafo]);
+                                break;
+                            default:
+                                Console.WriteLine("Por favor, insira um valor disponível no menu.");
+                                _ = Console.ReadLine();
+                                break;
+                        }
+                        break;
+                    case 3:
+                        Console.Clear();
+                        Console.WriteLine("Opções para obter grau: \n1:Vértice\n2:Grafo\n0:Voltar\n");
+
+                        Console.Write("Digite a opção: ");
+                        int i3 = int.Parse(Console.ReadLine());
+                        switch (i3)
+                        {
+                            case 0:
+                                SelecionarGrafo(lista_g);
+                                break;
+                            case 1:
+                                GrauVertice(lista_g[numeroGrafo]);
+                                break;
+                            case 2:
+                                GrauGrafo(lista_g[numeroGrafo]);
+                                break;
+                            default:
+                                Console.WriteLine("Por favor, insira um valor disponível no menu.");
+                                _ = Console.ReadLine();
+                                break;
+                        }
+                        break;
+                    case 4:
+                        Console.Clear();
+                        VerConexao(lista_g[numeroGrafo]);
+                        break;
+                    case 5:
+                        VerConexo(lista_g[numeroGrafo]);
+                        break;
+                    case 6:
+                        VerticesAdjacentes(lista_g[numeroGrafo]);
+                        break;
+                    case 7:
+                        Console.Clear();
+                        MatrizAdjacencia(lista_g[numeroGrafo]);
+                        break;
+                    case 8:
+                        VerEuller(lista_g[numeroGrafo]);
+                        break;
+                    default:
+                        Console.WriteLine("Por favor, insira um valor disponível no menu.");
+                        _ = Console.ReadLine();
+                        break;
+                }
+            } while (condicao != 0);
+
+
+        }
+        catch
+        {
+            Console.WriteLine("Por favor, insira um valor disponível no menu.");
+            _ = Console.ReadLine();
+        }
+
+
      }
 
     private static void RemoverGrafo(List<Grafo> lista_g)
@@ -222,11 +282,20 @@ public class Program
             Console.WriteLine(" " + lista_g.IndexOf(i) + " " + i.Nome);
         }
 
-        Console.WriteLine("Digite o número do grafo: ");
+        Console.Write("Digite o número do grafo: ");
         int numeroGrafo = int.Parse(Console.ReadLine());
-        Console.WriteLine("\nVocê removeu: " + lista_g[numeroGrafo].Nome);
-        lista_g.RemoveAt(numeroGrafo);
-        _ = Console.ReadLine();
+
+        try
+        {
+            Console.WriteLine("\nVocê removeu: " + lista_g[numeroGrafo].Nome);
+            lista_g.RemoveAt(numeroGrafo);
+            _ = Console.ReadLine();
+        }
+        catch
+        {
+            Console.WriteLine("Por favor, insira um valor disponível no menu.");
+            _ = Console.ReadLine();
+        }
     }
 
     private static void ImportarExportar(List<Grafo> lista_g)
@@ -606,10 +675,6 @@ public class Program
         _ = Console.ReadLine();
     }
 
-    public static void VerMatrizAdjacente()
-    {
-
-    }
 
     public static void VerEuller(Grafo grafo)
     {
