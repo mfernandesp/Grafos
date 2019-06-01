@@ -151,6 +151,7 @@ public class Program
                 Console.WriteLine("6.Obter Vertices Adjacentes");
                 Console.WriteLine("7.Imprimir Matriz de Adjacencia");
                 Console.WriteLine("8.Verificar Caminho de Euller");
+                Console.WriteLine("\n9.Exibir Dijkstra");
                 Console.WriteLine("0. Voltar");
 
                 Console.Write("\n\nDigite a opção desejada: ");
@@ -250,9 +251,12 @@ public class Program
                         break;
                     case 7:
                         Console.Clear();
-                        MatrizAdjacencia(lista_g[numeroGrafo]);
+                        ImprimeMatrizAdjacencia(lista_g[numeroGrafo], GetMatrizAdj(lista_g[numeroGrafo]));
                         break;
                     case 8:
+                        VerEuller(lista_g[numeroGrafo]);
+                        break;
+                    case 9:
                         VerEuller(lista_g[numeroGrafo]);
                         break;
                     default:
@@ -401,7 +405,7 @@ public class Program
                String[] propriedades = linhaGrafo.Split(new Char[] {','});
 
                 int ponderado = int.Parse(propriedades[1]);
-                int dirigido = int.Parse(propriedades[1]);
+                int dirigido = int.Parse(propriedades[2]);
 
                Grafo grafo = new Grafo(propriedades[0], ponderado, dirigido, idGrafos++);
                lista_g.Add(grafo);
@@ -683,7 +687,56 @@ public class Program
 
         _ = Console.ReadLine();
     }
+    /*
+    public static void VerDijkstra(Grafo grafo, Vertice x, Vertice y, int [,] matrizAdjacencia)
+    {
+        //Conjunto de vértices cujo caminho mínimo de x é conhecido
+        List<Vertice> _in = new List<Vertice>();
+        //vetor de inteiros. Para cada vértice, temos a distância de x (usando os vértices de IN)
+        // List<int> d = new List<int>();
+        int[] d = new int[grafo.ListaVertices.Count];
+        //vetor de vértices.Para cada vértice, temos o vértice anterior no caminho mínimo.
+      //  List<Vertice> s = new List<Vertice>();
+        int[] s = new int[grafo.ListaVertices.Count];
+        
+        //Inicializa o vetor d com todas as distâncias diretas de x aos outros vértices
+        foreach( var v in grafo.ListaVertices)
+        {
+            //A distancia para x é sempre 0
+            d[0] = 0;
 
+
+        }
+
+        //Inicializa o vetor s com x para todos os vertices
+
+        while (!_in.Contains(y))
+        {
+            Vertice p = DistanciaMinima(grafo, x);
+
+            foreach (var z in grafo.ListaVertices)
+            {
+                if (!_in.Contains(z))
+                {
+                    if (distanciaAnterior > distanciaDoVerticeAtual + A[p, z])
+                    {
+                        distanciaAnterior = distanciaDoVerticeAtual + A[p, z]
+                        verticeAnterior = VerticeAtual
+                    }
+
+                }
+            }
+        }
+
+
+    }
+
+    public static Vertice DistanciaMinima(Grafo grafo, Vertice x)
+    {
+        Vertice v = new Vertice();
+        return v;
+    }
+    */
     public static void MatrizAdjacencia(Grafo grafo)
     {
         var listaVertice = grafo.ListaVertices;
@@ -729,9 +782,75 @@ public class Program
         _ = Console.ReadLine();
     }
     
-    
+    public static int[,] GetMatrizAdj(Grafo grafo)
+    {
+        var listaVertice = grafo.ListaVertices;
+
+        int[,] matrizAdjacencia = new int[listaVertice.Count, listaVertice.Count];
 
 
+        for (int v1 = 0; v1 < listaVertice.Count; v1++)
+        {
+            var v = listaVertice[v1];
+            
+            for (int i1 = 0; i1 < listaVertice.Count; i1++)
+            {
+                var i = grafo.ListaVertices[i1];
+
+                int a = 0;
+
+                foreach (var j in grafo.ListaArestas)
+                {
+                    if (grafo.Dirigido == 1)
+                    {
+                        if ((j.Vertice_O.Id_v == v.Id_v && j.Vertive_D.Id_v == i.Id_v))
+                        {
+                            a = j.Peso;
+                        }
+                    }
+                    else
+                    {
+                        if ((j.Vertice_O.Id_v == v.Id_v && j.Vertive_D.Id_v == i.Id_v) || (j.Vertice_O.Id_v == i.Id_v && j.Vertive_D.Id_v == v.Id_v))
+                        {
+                            a = j.Peso;
+                        }
+                    }
+                }
+
+                matrizAdjacencia[v1, i1] = a;
+            }
+        }
+
+        return matrizAdjacencia;
+    }
+
+    public static void ImprimeMatrizAdjacencia(Grafo grafo, int[,] matrizAdjacencia)
+    {
+
+        //Cabeçalho
+        Console.Write("   ");
+        foreach (var i in grafo.ListaVertices)
+        {
+            Console.Write(" | " + i.Nome);
+        }
+
+
+        for (int v1 = 0; v1 < grafo.ListaVertices.Count; v1++)
+        {
+            var v = grafo.ListaVertices[v1];
+            Console.Write("\n" + v.Nome);
+
+            for (int i1 = 0; i1 < grafo.ListaVertices.Count; i1++)
+            {
+                var i = grafo.ListaVertices[i1];
+
+
+                Console.Write(" |  " + matrizAdjacencia[v1, i1]);
+            }
+        }
+
+        _ = Console.ReadLine();
+    }
 }
 
 
