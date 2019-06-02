@@ -257,7 +257,9 @@ public class Program
                         VerEuller(lista_g[numeroGrafo]);
                         break;
                     case 9:
-                        VerEuller(lista_g[numeroGrafo]);
+                        if (lista_g[numeroGrafo].Conexo)
+                            VerDijkstra(lista_g[numeroGrafo]);
+                        else Console.WriteLine("Grafo não é Conexo.");
                         break;
                     default:
                         Console.WriteLine("Por favor, insira um valor disponível no menu.");
@@ -679,7 +681,6 @@ public class Program
         _ = Console.ReadLine();
     }
 
-
     public static void VerEuller(Grafo grafo)
     {
         var strResposta = grafo.PossuiCaminhoEuleriano ? "" : "não ";
@@ -687,56 +688,151 @@ public class Program
 
         _ = Console.ReadLine();
     }
-    /*
-    public static void VerDijkstra(Grafo grafo, Vertice x, Vertice y, int [,] matrizAdjacencia)
+
+    public struct AuxDijkstra
     {
-        //Conjunto de vértices cujo caminho mínimo de x é conhecido
-        List<Vertice> _in = new List<Vertice>();
-        //vetor de inteiros. Para cada vértice, temos a distância de x (usando os vértices de IN)
-        // List<int> d = new List<int>();
-        int[] d = new int[grafo.ListaVertices.Count];
-        //vetor de vértices.Para cada vértice, temos o vértice anterior no caminho mínimo.
-      //  List<Vertice> s = new List<Vertice>();
-        int[] s = new int[grafo.ListaVertices.Count];
-        
-        //Inicializa o vetor d com todas as distâncias diretas de x aos outros vértices
-        foreach( var v in grafo.ListaVertices)
+        public Vertice v;
+        public int d;
+        public Vertice s;
+        public AuxDijkstra(Vertice v, int d, Vertice s)
         {
-            //A distancia para x é sempre 0
-            d[0] = 0;
+            this.v = v;
+            this.d = d;
+            this.s = s;
+        }
+    }
 
-
+    public static void VerDijkstra(Grafo grafo)
+    {
+        Console.Clear();
+        Console.WriteLine("\nVértices: ");
+        foreach (Grafos.Vertice i in grafo.ListaVertices)
+        {
+            Console.WriteLine(" " + grafo.ListaVertices.IndexOf(i) + " " + i.Nome);
         }
 
-        //Inicializa o vetor s com x para todos os vertices
+        Console.Write("\nDigite o número do vertice de partida : ");
+        int idVerticeA = int.Parse(Console.ReadLine());
 
+        Console.Write("\nDigite o número do vertice de destino: ");
+        int idVerticeB = int.Parse(Console.ReadLine());
+        
+        Vertice x = grafo.ListaVertices[idVerticeA];
+        Vertice y = grafo.ListaVertices[idVerticeB];        
+        
+        //Conjunto de vértices cujo caminho mínimo de x é conhecido
+        List<Vertice> _in = new List<Vertice>();
+        List<AuxDijkstra> aux = new List<AuxDijkstra>();
+
+        _in.Add(x);
+
+        //Inicializa o vetor d com todas as distâncias diretas de x aos outros vértices
+        foreach ( var v in grafo.ListaVertices)
+        {
+            AuxDijkstra a = new AuxDijkstra(v, DistanciaDireta(grafo, x, v), x);
+            aux.Add(a);
+        }
+
+        
         while (!_in.Contains(y))
         {
-            Vertice p = DistanciaMinima(grafo, x);
+            // Procura o vertice p com a menor distancia
+            AuxDijkstra p = new AuxDijkstra();
+            
+            int i = 0;
+            foreach (var a in aux)
+                if (a.d > i)
+                    i = a.d;
 
-            foreach (var z in grafo.ListaVertices)
+            foreach (var a in aux)
             {
-                if (!_in.Contains(z))
+                if (a.d != 0 && a.d <= i && !_in.Contains(a.v))
                 {
-                    if (distanciaAnterior > distanciaDoVerticeAtual + A[p, z])
-                    {
-                        distanciaAnterior = distanciaDoVerticeAtual + A[p, z]
-                        verticeAnterior = VerticeAtual
-                    }
+                    p = a;
+                    i = a.d;
+                }
+                   
+            }
 
+            _in.Add(p.v);
+
+            //Recalcula o valor de d para os vertices restantes
+            for(i = 0; i < aux.Count; i++)
+            {
+                var z = aux[i];
+
+                if (!_in.Contains(z.v))
+                {
+                    if(z.d == 0)
+                    {
+                        z.d = p.d + DistanciaDireta(grafo, z.v, p.v);
+                        z.s = p.v;
+                    }else if (z.d > p.d + DistanciaDireta(grafo, z.v, p.v))
+                    {
+                        z.d = p.d + DistanciaDireta(grafo, z.v, p.v);
+                        z.s = p.v;
+                    }                    
+                }
+                aux[i] = z;
+            }
+        }
+
+        //Imprime as distancias para cada vertice
+        foreach(var a in aux)
+        {
+            Console.WriteLine("Vertice: " + a.v.Nome + " d: " + a.d + " s: " + a.s.Nome);
+        }
+
+
+        //imprime o caminho 
+        AuxDijkstra y1 = new AuxDijkstra();
+        AuxDijkstra x1 = new AuxDijkstra();
+
+        foreach (var a in aux)        
+            if (a.v.Equals(y))
+                y1 = a;
+
+        Console.WriteLine("\nO caminho é: ");
+        Console.Write(y1.v.Nome + " <- ");
+        x1 = y1;
+        do
+        {
+            Console.Write(x1.s.Nome + " <- ");
+            foreach (var a in aux)
+                if (a.v.Equals(x1.s))
+                    x1 = a;
+
+        } while(!x1.v.Equals(x));
+
+        Console.WriteLine("\nA distância miníma é: " + y1.d);
+
+        _ = Console.ReadLine();
+    }
+
+    public static int DistanciaDireta(Grafo grafo, Vertice x, Vertice v)
+    {
+        int dis = 0;
+        foreach (var j in grafo.ListaArestas)
+        {
+            if (grafo.Dirigido == 1)
+            {
+                if ((j.Vertice_O.Id_v == v.Id_v && j.Vertive_D.Id_v == x.Id_v))
+                {
+                    dis = j.Peso;
+                }
+            }
+            else
+            {
+                if ((j.Vertice_O.Id_v == v.Id_v && j.Vertive_D.Id_v == x.Id_v) || (j.Vertice_O.Id_v == x.Id_v && j.Vertive_D.Id_v == v.Id_v))
+                {
+                    dis = j.Peso;
                 }
             }
         }
 
-
+        return dis;
     }
 
-    public static Vertice DistanciaMinima(Grafo grafo, Vertice x)
-    {
-        Vertice v = new Vertice();
-        return v;
-    }
-    */
     public static void MatrizAdjacencia(Grafo grafo)
     {
         var listaVertice = grafo.ListaVertices;
