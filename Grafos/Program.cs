@@ -153,7 +153,11 @@ public class Program
                 Console.WriteLine("8.Verificar Caminho de Euller");
                 Console.WriteLine("9.Algoritmo Dijkstra");
                 Console.WriteLine("10.Algoritmo Warshall");
-                Console.WriteLine("0. Voltar");
+                Console.WriteLine("12.Algoritmo Bellman-Ford");
+                Console.WriteLine("11.Algoritmo Floyd");
+                Console.WriteLine("13.Quantidade de Componentes");
+                Console.WriteLine("14.Maior Componente");
+                Console.WriteLine("0.Voltar");
 
                 Console.Write("\n\nDigite a opção desejada: ");
                 try
@@ -264,6 +268,16 @@ public class Program
                         break;
                     case 10:
                         AlWarshall(lista_g[numeroGrafo]);
+                        break;
+                    case 11:
+                        AlFloyd(lista_g[numeroGrafo]);
+                        break;
+                    case 13:
+                        Console.WriteLine( "A quantidade de componentes é " + GeraComponetes(lista_g[numeroGrafo]).Count + ".");
+                        _ = Console.ReadLine();
+                        break;
+                    case 14:
+                        MaiorComponente(lista_g[numeroGrafo]);
                         break;
                     default:
                         Console.WriteLine("Por favor, insira um valor disponível no menu.");
@@ -708,22 +722,9 @@ public class Program
     public static void AlWarshall(Grafo grafo)
     {
         Console.Clear();
-        int[,] m = GetMatrizAdj(grafo);
+        int[,] m = GetWarshall(grafo);
 
-        for (int i = 0; i < grafo.ListaVertices.Count; i++)
-            for (int j = 0; j < grafo.ListaVertices.Count; j++)
-                if(m[i,j] == 0)
-                {
-                    m[i, j] = 9999;
-                }
-
-        for (int k = 0; k < grafo.ListaVertices.Count; k++)        
-            for (int i = 0; i < grafo.ListaVertices.Count; i++)
-                for (int j = 0; j < grafo.ListaVertices.Count; j++)                
-                    if (m[i, j] > (m[i, k] + m[k, j]))
-                    {
-                        m[i, j] = m[i, k] + m[k, j];
-                    }
+        
         //imprime a matriz que foi gerada
 
         //Cabeçalho
@@ -745,8 +746,17 @@ public class Program
                     Console.Write(" |  " + 1);
             }
         }
+        
+        _ = Console.ReadLine();
+    }
 
-        Console.WriteLine("\nConsiderando o tamanho do caminho: ");
+    public static void AlFloyd(Grafo grafo)
+    {
+        Console.Clear();
+        int[,] m = GetWarshall(grafo);
+
+
+        //imprime a matriz que foi gerada
 
         //Cabeçalho
         Console.Write("  ");
@@ -769,6 +779,28 @@ public class Program
         }
 
         _ = Console.ReadLine();
+    }
+
+    public static int[,] GetWarshall(Grafo grafo)
+    {
+        int[,] m = GetMatrizAdj(grafo);
+
+        for (int i = 0; i < grafo.ListaVertices.Count; i++)
+            for (int j = 0; j < grafo.ListaVertices.Count; j++)
+                if (m[i, j] == 0)
+                {
+                    m[i, j] = 9999;
+                }
+
+        for (int k = 0; k < grafo.ListaVertices.Count; k++)
+            for (int i = 0; i < grafo.ListaVertices.Count; i++)
+                for (int j = 0; j < grafo.ListaVertices.Count; j++)
+                    if (m[i, j] > (m[i, k] + m[k, j]))
+                    {
+                        m[i, j] = m[i, k] + m[k, j];
+                    }
+
+        return m;
     }
 
     public static void VerDijkstra(Grafo grafo)
@@ -902,6 +934,101 @@ public class Program
         return dis;
     }
 
+    public struct Componente
+    {
+        public List<Vertice> vertices;
+        public int id;      
+
+        public Componente(List<Vertice> vertices, int id)
+        {
+            this.id = id;
+            this.vertices = vertices;
+        }
+    }
+
+    public static List<Componente> GeraComponetes(Grafo grafo)
+    {
+        List<Componente> componentes = new List<Componente>();
+
+        int i = 0;
+        List<Vertice> v = new List<Vertice>();
+        v.Add(grafo.ListaVertices[0]);
+        Componente c = new Componente(v, i);
+        componentes.Add(c);
+
+        int[,] matrizAcessibilidade = GetWarshall(grafo);
+
+
+        for (int j = 1; j < grafo.ListaVertices.Count; j++)
+        {
+            Vertice vertice = grafo.ListaVertices[j];
+            bool achouComponente = false;
+
+            foreach (var componente in componentes)
+            {
+                if (!componente.vertices.Contains(vertice))
+                {
+                    bool existeCaminho = false;
+
+                    foreach(var v1 in componente.vertices)                    
+                        if (matrizAcessibilidade[j, grafo.ListaVertices.IndexOf(v1)] != 9999 || matrizAcessibilidade[grafo.ListaVertices.IndexOf(v1), j] != 9999)
+                           existeCaminho = true;
+
+                    if (existeCaminho)
+                    {
+                        componente.vertices.Add(vertice);
+                        achouComponente = true;
+                    }
+
+                }
+
+            }
+
+            if (!achouComponente)
+            {
+                List<Vertice> l = new List<Vertice>();
+                l.Add(vertice);
+                Componente novoComponente = new Componente(l, ++i);
+                componentes.Add(novoComponente);
+            }
+        }
+
+        foreach (var c1 in componentes)
+        {
+            Console.WriteLine("Componente " + c1.id + ":");
+
+            foreach (var v1 in c1.vertices)
+                Console.Write(" " + v1.Nome + ",");
+
+            Console.WriteLine();
+        }
+
+        
+        _ = Console.ReadLine();
+
+        return componentes;
+    }
+
+    public static void MaiorComponente(Grafo grafo)
+    {
+        List<Componente> componentes = GeraComponetes(grafo);
+        Componente maior = new Componente();
+
+        int i = 0;
+        foreach (var c in componentes)
+        {
+            if(c.vertices.Count > i)
+            {
+                i = c.vertices.Count;
+                maior = c;
+            }
+        }
+
+        Console.WriteLine("O maior componente possuí " + maior.vertices.Count + " vertice(s).");
+
+        _ = Console.ReadLine();
+    }
+
     public static void MatrizAdjacencia(Grafo grafo)
     {
         var listaVertice = grafo.ListaVertices;
@@ -1017,5 +1144,3 @@ public class Program
         _ = Console.ReadLine();
     }
 }
-
-
