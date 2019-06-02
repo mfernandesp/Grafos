@@ -151,7 +151,8 @@ public class Program
                 Console.WriteLine("6.Obter Vertices Adjacentes");
                 Console.WriteLine("7.Imprimir Matriz de Adjacencia");
                 Console.WriteLine("8.Verificar Caminho de Euller");
-                Console.WriteLine("\n9.Exibir Dijkstra");
+                Console.WriteLine("9.Algoritmo Dijkstra");
+                Console.WriteLine("10.Algoritmo Warshall");
                 Console.WriteLine("0. Voltar");
 
                 Console.Write("\n\nDigite a opção desejada: ");
@@ -260,6 +261,9 @@ public class Program
                         if (lista_g[numeroGrafo].Conexo)
                             VerDijkstra(lista_g[numeroGrafo]);
                         else Console.WriteLine("Grafo não é Conexo.");
+                        break;
+                    case 10:
+                        AlWarshall(lista_g[numeroGrafo]);
                         break;
                     default:
                         Console.WriteLine("Por favor, insira um valor disponível no menu.");
@@ -556,7 +560,6 @@ public class Program
             _ = Console.ReadLine();
         }
     }
-    
     public static void RemoverVertice(Grafo grafo)
     {
         Console.WriteLine("\nVétices do grafo " + grafo.Nome +":");
@@ -700,6 +703,72 @@ public class Program
             this.d = d;
             this.s = s;
         }
+    }
+
+    public static void AlWarshall(Grafo grafo)
+    {
+        Console.Clear();
+        int[,] m = GetMatrizAdj(grafo);
+
+        for (int i = 0; i < grafo.ListaVertices.Count; i++)
+            for (int j = 0; j < grafo.ListaVertices.Count; j++)
+                if(m[i,j] == 0)
+                {
+                    m[i, j] = 9999;
+                }
+
+        for (int k = 0; k < grafo.ListaVertices.Count; k++)        
+            for (int i = 0; i < grafo.ListaVertices.Count; i++)
+                for (int j = 0; j < grafo.ListaVertices.Count; j++)                
+                    if (m[i, j] > (m[i, k] + m[k, j]))
+                    {
+                        m[i, j] = m[i, k] + m[k, j];
+                    }
+        //imprime a matriz que foi gerada
+
+        //Cabeçalho
+        Console.Write("  ");
+        foreach (var i in grafo.ListaVertices)
+        {
+            Console.Write(" | " + i.Nome);
+        }
+
+        for (int i = 0; i < grafo.ListaVertices.Count; i++)
+        {             
+            Console.Write("\n" + grafo.ListaVertices[i].Nome);
+
+            for (int j = 0; j < grafo.ListaVertices.Count; j++)
+            {
+               if (m[i,j] == 9999)
+                    Console.Write(" |  0");
+               else
+                    Console.Write(" |  " + 1);
+            }
+        }
+
+        Console.WriteLine("\nConsiderando o tamanho do caminho: ");
+
+        //Cabeçalho
+        Console.Write("  ");
+        foreach (var i in grafo.ListaVertices)
+        {
+            Console.Write(" | " + i.Nome);
+        }
+
+        for (int i = 0; i < grafo.ListaVertices.Count; i++)
+        {
+            Console.Write("\n" + grafo.ListaVertices[i].Nome);
+
+            for (int j = 0; j < grafo.ListaVertices.Count; j++)
+            {
+                if (m[i, j] == 9999)
+                    Console.Write(" |  0");
+                else
+                    Console.Write(" |  " + m[i, j]);
+            }
+        }
+
+        _ = Console.ReadLine();
     }
 
     public static void VerDijkstra(Grafo grafo)
