@@ -794,6 +794,20 @@ public class Program
     private static void AlBellmanFord(Grafo grafo)
     {
         var distancias = Program.BellmanFord(grafo, GetVerticeFromInput(grafo));
+        
+        // Checagem de ciclos negativos
+        for (int i = 0; i < grafo.ListaArestas.Count; i++)
+        {
+            Vertice origem = grafo.ListaArestas[i].Vertice_O; //u
+            Vertice destino = grafo.ListaArestas[i].Vertive_D; // v
+            int peso = grafo.ListaArestas[i].Peso;
+            if (distancias[origem] != int.MaxValue
+                && distancias[origem] + peso < distancias[destino])
+            {
+                Console.WriteLine("Grafo contém ciclos negativos");
+                break;
+            }
+        }
 
         // Printa distâncias
         Console.WriteLine("Vértice Destino \t Distância");
@@ -844,7 +858,7 @@ public class Program
         if (distancias[origem] != int.MaxValue
             && distancias[origem] + peso < distancias[destino])
         {
-        distancias[destino] = distancias[origem] + peso;
+            distancias[destino] = distancias[origem] + peso;
         }
     }
 
