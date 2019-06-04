@@ -274,7 +274,7 @@ public class Program
                         AlFloyd(lista_g[numeroGrafo]);
                         break;
                     case 12:
-                        AlBellmanForm(lista_g[numeroGrafo]);
+                        AlBellmanFord(lista_g[numeroGrafo]);
                         break;
                     case 13:
                         Console.WriteLine("A quantidade de componentes é " + GeraComponetes(lista_g[numeroGrafo]).Count + ".");
@@ -789,15 +789,8 @@ public class Program
     }
 
 
-    private static void AlBellmanForm(Grafo grafo)
+    private static void AlBellmanFord(Grafo grafo)
     {
-        if (grafo.Poderado == 0 || grafo.Dirigido == 0)
-        {
-            Console.WriteLine("Não é possível continuar pois o grafo precisar ser ponderado e dirigido");
-            _ = Console.ReadLine();
-            return;
-        }
-
         Program.BellmanFord(grafo, GetVerticeFromInput(grafo));
         _ = Console.ReadLine();
     }
@@ -828,6 +821,17 @@ public class Program
                 }
 
             }
+        }
+
+        // Checagem de ciclos negativos
+        for (int i = 0; i < arestasCount; i++)
+        {
+            Vertice origem = grafo.ListaArestas[i].Vertice_O; //u
+            Vertice destino = grafo.ListaArestas[i].Vertive_D; // v
+            int peso = grafo.ListaArestas[i].Peso;
+            if (distancias[origem.Id_v] != int.MaxValue
+                && distancias[origem.Id_v] + peso < distancias[destino.Id_v])
+                Console.WriteLine("Grafo contém ciclos negativos");
         }
 
         printArr(distancias, verticesCount);
