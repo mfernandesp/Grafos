@@ -43,6 +43,8 @@ public class Program
 
             switch (condicao)
             {
+                case 0:
+                    break;
                 case 1:
                     Console.Clear();
                     CriarGrafo(lista_g);
@@ -791,64 +793,60 @@ public class Program
 
     private static void AlBellmanFord(Grafo grafo)
     {
-        Program.BellmanFord(grafo, GetVerticeFromInput(grafo));
+        var distancias = Program.BellmanFord(grafo, GetVerticeFromInput(grafo));
+
+        // Printa distâncias
+        Console.WriteLine("Vértice Destino \t Distância");
+        foreach (var vertice in grafo.ListaVertices)
+        {
+            string distancia = distancias[vertice] == 
+                int.MaxValue ? "--" : distancias[vertice].ToString();
+
+            Console.WriteLine($"{vertice.Nome} \t\t\t {distancia}\n");
+        }
         _ = Console.ReadLine();
     }
 
-    public static void BellmanFord(Grafo grafo, Vertice source)
+    public static Dictionary<Vertice, int> BellmanFord(Grafo grafo, Vertice source)
     {
         int verticesCount = grafo.ListaVertices.Count;
         int arestasCount = grafo.ListaArestas.Count;
-        int[] distancias = new int[verticesCount];
+        Dictionary<Vertice, int> distancias = new Dictionary<Vertice, int>();
+        foreach (var vert in grafo.ListaVertices)
+        {
+            distancias.Add(vert, int.MaxValue);
+        }
 
-        for (int i = 0; i < verticesCount; i++)
-            distancias[i] = int.MaxValue;
-
-        distancias[source.Id_v] = 0;
+        distancias[source] = 0;
 
         for (int i = 1; i <= (verticesCount - 1); ++i)
         {
             for (int j = 0; j < arestasCount; ++j)
             {
-                Vertice origem = grafo.ListaArestas[j].Vertice_O; //u
-                Vertice destino = grafo.ListaArestas[j].Vertive_D; // v
-                int peso = grafo.ListaArestas[j].Peso;
-
-                if (distancias[origem.Id_v] != int.MaxValue
-                    && distancias[origem.Id_v] + peso < distancias[destino.Id_v])
-                {
-                    distancias[destino.Id_v] = distancias[origem.Id_v] + peso;
+                DefinirPesoDistanciaPorAresta(grafo.ListaArestas[j].Vertice_O, 
+                                              grafo.ListaArestas[j].Vertive_D,  
+                                              grafo.ListaArestas[j].Peso,
+                                              ref distancias);
+                if (grafo.Dirigido == 0) {
+                    DefinirPesoDistanciaPorAresta(grafo.ListaArestas[j].Vertive_D, 
+                                                  grafo.ListaArestas[j].Vertice_O, 
+                                                  grafo.ListaArestas[j].Peso,
+                                                  ref distancias);
                 }
 
             }
         }
-
-        // Checagem de ciclos negativos
-        for (int i = 0; i < arestasCount; i++)
-        {
-            Vertice origem = grafo.ListaArestas[i].Vertice_O; //u
-            Vertice destino = grafo.ListaArestas[i].Vertive_D; // v
-            int peso = grafo.ListaArestas[i].Peso;
-            if (distancias[origem.Id_v] != int.MaxValue
-                && distancias[origem.Id_v] + peso < distancias[destino.Id_v])
-                Console.WriteLine("Grafo contém ciclos negativos");
-        }
-
-        printArr(distancias, verticesCount);
+        return distancias;
     }
 
-    private static void printArr(int[] distancias, int numeroVertices)
+    private static void DefinirPesoDistanciaPorAresta(Vertice origem, Vertice destino, int peso, ref Dictionary<Vertice, int> distancias)
     {
-        Console.WriteLine("Vértice Destino \t Distância");
-        for (int idVertice = 0; idVertice < numeroVertices; idVertice++)
+        if (distancias[origem] != int.MaxValue
+            && distancias[origem] + peso < distancias[destino])
         {
-            string distancia = distancias[idVertice] == 
-                int.MaxValue ? "--" : distancias[idVertice].ToString();
-
-            Console.WriteLine($"{idVertice} \t\t\t {distancia}\n");
+        distancias[destino] = distancias[origem] + peso;
         }
     }
-
 
     public static int[,] GetWarshall(Grafo grafo)
     {

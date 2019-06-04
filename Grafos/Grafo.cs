@@ -28,15 +28,12 @@ namespace Grafos
         {
             get
             {
-                foreach (var verticeA in this.ListaVertices) // Verifica todos os vértices do grafo
+                foreach (var vertice in this.ListaVertices)
                 {
-                    // O grafo só é conexo se houver conexão entre todos os vértices
-                    if (this.ListaVertices.Where(v => v.Id_v != verticeA.Id_v).ToList() // Recupera todos os outros vértices do grafo
-                          .Any(verticeB => !this.PossuiConexaoEntreOsVertices(verticeA.Id_v, verticeB.Id_v))) // Verifica se existe algum outro vértice que não é conexo ao atual
-                        return false; // Caso exista algum outro vértice do grafo sem conexão ao que estamos verificando, o grafo não é conexo
+                    var distanciasCaminhosPossiveis = Program.BellmanFord(this, vertice);
+                    if (distanciasCaminhosPossiveis.Values.Any(v => v == int.MaxValue))
+                        return false;
                 }
-
-                // Caso todos os vértices estejam conectados entre si, o grafo é conexo
                 return true;
             }
         }
