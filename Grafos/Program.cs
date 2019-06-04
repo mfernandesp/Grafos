@@ -39,7 +39,7 @@ public class Program
                 condicao = Int32.MinValue;
             }
 
-            
+
 
             switch (condicao)
             {
@@ -78,7 +78,8 @@ public class Program
         Console.Write("\nDigite a opção: ");
         int ponderado = int.Parse(Console.ReadLine());
 
-        if (ponderado != 1 && ponderado != 0){
+        if (ponderado != 1 && ponderado != 0)
+        {
             Console.WriteLine("Por favor, insira um valor disponível no menu.");
             _ = Console.ReadLine();
             CriarGrafo(lista_g);
@@ -105,11 +106,11 @@ public class Program
 
                 Console.WriteLine("\n\nGrafo '" + grafo.Nome + "' criado com Sucesso!");
                 _ = Console.ReadLine();
-            }            
+            }
 
         }
 
-        
+
     }
 
     private static void SelecionarGrafo(List<Grafo> lista_g)
@@ -120,7 +121,7 @@ public class Program
         {
             Console.WriteLine(" " + lista_g.IndexOf(i) + " " + i.Nome);
         }
-        
+
         Console.Write("\n\nDigite o número do grafo: ");
         int numeroGrafo = int.Parse(Console.ReadLine());
 
@@ -153,8 +154,8 @@ public class Program
                 Console.WriteLine("8.Verificar Caminho de Euller");
                 Console.WriteLine("9.Algoritmo Dijkstra");
                 Console.WriteLine("10.Algoritmo Warshall");
-                Console.WriteLine("12.Algoritmo Bellman-Ford");
                 Console.WriteLine("11.Algoritmo Floyd");
+                Console.WriteLine("12.Algoritmo Bellman-Ford");
                 Console.WriteLine("13.Quantidade de Componentes");
                 Console.WriteLine("14.Maior Componente");
                 Console.WriteLine("0.Voltar");
@@ -272,8 +273,11 @@ public class Program
                     case 11:
                         AlFloyd(lista_g[numeroGrafo]);
                         break;
+                    case 12:
+                        AlBellmanForm(lista_g[numeroGrafo]);
+                        break;
                     case 13:
-                        Console.WriteLine( "A quantidade de componentes é " + GeraComponetes(lista_g[numeroGrafo]).Count + ".");
+                        Console.WriteLine("A quantidade de componentes é " + GeraComponetes(lista_g[numeroGrafo]).Count + ".");
                         _ = Console.ReadLine();
                         break;
                     case 14:
@@ -295,7 +299,7 @@ public class Program
         }
 
 
-     }
+    }
 
     private static void RemoverGrafo(List<Grafo> lista_g)
     {
@@ -351,10 +355,10 @@ public class Program
         //string[] lines = { "First line", "Second line", "Third line" };
         foreach (var i in lista_g)
         {
-            String textoGrafo = "Grafo = " + i.Nome + "," + i.Poderado + "," + i.Dirigido ;
+            String textoGrafo = "Grafo = " + i.Nome + "," + i.Poderado + "," + i.Dirigido;
             textoArquivo.Add(textoGrafo);
 
-            foreach(var j in i.ListaVertices)
+            foreach (var j in i.ListaVertices)
             {
                 String textoVertice = "Vertice = " + j.Nome + "," + i.Nome;
                 textoArquivo.Add(textoVertice);
@@ -367,7 +371,7 @@ public class Program
             }
         }
 
-        foreach(var line in textoArquivo)
+        foreach (var line in textoArquivo)
         {
             Console.WriteLine(line);
         }
@@ -418,17 +422,17 @@ public class Program
 
         foreach (var line in textoArquivo)
         {
-            if(line.StartsWith("Grafo = "))
+            if (line.StartsWith("Grafo = "))
             {
-               
-               String linhaGrafo = line.Replace("Grafo = ", "");
-               String[] propriedades = linhaGrafo.Split(new Char[] {','});
+
+                String linhaGrafo = line.Replace("Grafo = ", "");
+                String[] propriedades = linhaGrafo.Split(new Char[] { ',' });
 
                 int ponderado = int.Parse(propriedades[1]);
                 int dirigido = int.Parse(propriedades[2]);
 
-               Grafo grafo = new Grafo(propriedades[0], ponderado, dirigido, idGrafos++);
-               lista_g.Add(grafo);
+                Grafo grafo = new Grafo(propriedades[0], ponderado, dirigido, idGrafos++);
+                lista_g.Add(grafo);
 
                 Console.WriteLine("\nGrafo '" + grafo.Nome + "' criado com Sucesso!");
             }
@@ -438,11 +442,11 @@ public class Program
                 String linhaGrafo = line.Replace("Vertice = ", "");
                 String[] propriedades = linhaGrafo.Split(new Char[] { ',' });
 
-                foreach(var grafo in lista_g)
+                foreach (var grafo in lista_g)
                 {
                     if (grafo.Nome.Equals(propriedades[1]))
                     {
-                        
+
                         Vertice V = new Grafos.Vertice(idVertices++, propriedades[0], grafo);
 
                         grafo.ListaVertices.Add(V);
@@ -465,7 +469,7 @@ public class Program
                 {
                     if (grafo.Nome.Equals(propriedades[1]))
                     {
-                        foreach(var verO in grafo.ListaVertices)
+                        foreach (var verO in grafo.ListaVertices)
                         {
                             if (verO.Nome.Equals(propriedades[2]))
                             {
@@ -481,14 +485,14 @@ public class Program
                                         grafo.ListaArestas.Add(A);
 
                                         Console.WriteLine("Aresta '" + A.Nome + "' inserida no grafo '" + grafo.Nome + "'com sucesso!");
-                                    }                                    
+                                    }
                                 }
                             }
                         }
 
                     }
                 }
-                
+
             }
 
         }
@@ -511,7 +515,7 @@ public class Program
         _ = Console.ReadLine();
     }
     public static void InserirAresta(Grafo grafo)
-    {   
+    {
         Console.Write("Digite o nome da Aresta: ");
         String nomeAresta = Console.ReadLine();
 
@@ -533,7 +537,8 @@ public class Program
         int idVerticeB = -1;
         Boolean conectados = false;
 
-        if (grafo.Dirigido == 1){
+        if (grafo.Dirigido == 1)
+        {
             Console.Write("\nDigite o número do Vertice A(Origem): ");
             idVerticeA = int.Parse(Console.ReadLine());
 
@@ -542,7 +547,8 @@ public class Program
 
             conectados = grafo.PossuiConexaoEntreOsVertices(idVerticeA, idVerticeB);
         }
-        else{
+        else
+        {
             Console.Write("\nDigite o número do primeiro Vertice: ");
             idVerticeA = int.Parse(Console.ReadLine());
 
@@ -576,7 +582,7 @@ public class Program
     }
     public static void RemoverVertice(Grafo grafo)
     {
-        Console.WriteLine("\nVétices do grafo " + grafo.Nome +":");
+        Console.WriteLine("\nVétices do grafo " + grafo.Nome + ":");
         foreach (Grafos.Vertice i in grafo.ListaVertices)
         {
             Console.WriteLine(" " + grafo.ListaVertices.IndexOf(i) + " " + i.Nome);
@@ -590,7 +596,7 @@ public class Program
         grafo.ListaVertices.RemoveAt(idVerticeA);
 
         _ = Console.ReadLine();
-   
+
     }
     public static void RemoverAresta(Grafo grafo)
     {
@@ -684,7 +690,8 @@ public class Program
             Console.WriteLine("\nVértices estão conectados.");
             _ = Console.ReadLine();
         }
-        else {
+        else
+        {
             Console.WriteLine("\nVértices não estão conectados.");
             _ = Console.ReadLine();
         }
@@ -724,7 +731,7 @@ public class Program
         Console.Clear();
         int[,] m = GetWarshall(grafo);
 
-        
+
         //imprime a matriz que foi gerada
 
         //Cabeçalho
@@ -735,18 +742,18 @@ public class Program
         }
 
         for (int i = 0; i < grafo.ListaVertices.Count; i++)
-        {             
+        {
             Console.Write("\n" + grafo.ListaVertices[i].Nome);
 
             for (int j = 0; j < grafo.ListaVertices.Count; j++)
             {
-               if (m[i,j] == 9999)
+                if (m[i, j] == 9999)
                     Console.Write(" |  0");
-               else
+                else
                     Console.Write(" |  " + 1);
             }
         }
-        
+
         _ = Console.ReadLine();
     }
 
@@ -780,6 +787,64 @@ public class Program
 
         _ = Console.ReadLine();
     }
+
+
+    private static void AlBellmanForm(Grafo grafo)
+    {
+        if (grafo.Poderado == 0 || grafo.Dirigido == 0)
+        {
+            Console.WriteLine("Não é possível continuar pois o grafo precisar ser ponderado e dirigido");
+            _ = Console.ReadLine();
+            return;
+        }
+
+        Program.BellmanFord(grafo, GetVerticeFromInput(grafo));
+        _ = Console.ReadLine();
+    }
+
+    public static void BellmanFord(Grafo grafo, Vertice source)
+    {
+        int verticesCount = grafo.ListaVertices.Count;
+        int arestasCount = grafo.ListaArestas.Count;
+        int[] distancias = new int[verticesCount];
+
+        for (int i = 0; i < verticesCount; i++)
+            distancias[i] = int.MaxValue;
+
+        distancias[source.Id_v] = 0;
+
+        for (int i = 1; i <= (verticesCount - 1); ++i)
+        {
+            for (int j = 0; j < arestasCount; ++j)
+            {
+                Vertice origem = grafo.ListaArestas[j].Vertice_O; //u
+                Vertice destino = grafo.ListaArestas[j].Vertive_D; // v
+                int peso = grafo.ListaArestas[j].Peso;
+
+                if (distancias[origem.Id_v] != int.MaxValue
+                    && distancias[origem.Id_v] + peso < distancias[destino.Id_v])
+                {
+                    distancias[destino.Id_v] = distancias[origem.Id_v] + peso;
+                }
+
+            }
+        }
+
+        printArr(distancias, verticesCount);
+    }
+
+    private static void printArr(int[] distancias, int numeroVertices)
+    {
+        Console.WriteLine("Vértice Destino \t Distância");
+        for (int idVertice = 0; idVertice < numeroVertices; idVertice++)
+        {
+            string distancia = distancias[idVertice] == 
+                int.MaxValue ? "--" : distancias[idVertice].ToString();
+
+            Console.WriteLine($"{idVertice} \t\t\t {distancia}\n");
+        }
+    }
+
 
     public static int[,] GetWarshall(Grafo grafo)
     {
@@ -817,10 +882,10 @@ public class Program
 
         Console.Write("\nDigite o número do vertice de destino: ");
         int idVerticeB = int.Parse(Console.ReadLine());
-        
+
         Vertice x = grafo.ListaVertices[idVerticeA];
-        Vertice y = grafo.ListaVertices[idVerticeB];        
-        
+        Vertice y = grafo.ListaVertices[idVerticeB];
+
         //Conjunto de vértices cujo caminho mínimo de x é conhecido
         List<Vertice> _in = new List<Vertice>();
         List<AuxDijkstra> aux = new List<AuxDijkstra>();
@@ -828,18 +893,18 @@ public class Program
         _in.Add(x);
 
         //Inicializa o vetor d com todas as distâncias diretas de x aos outros vértices
-        foreach ( var v in grafo.ListaVertices)
+        foreach (var v in grafo.ListaVertices)
         {
             AuxDijkstra a = new AuxDijkstra(v, DistanciaDireta(grafo, x, v), x);
             aux.Add(a);
         }
 
-        
+
         while (!_in.Contains(y))
         {
             // Procura o vertice p com a menor distancia
             AuxDijkstra p = new AuxDijkstra();
-            
+
             int i = 0;
             foreach (var a in aux)
                 if (a.d > i)
@@ -852,34 +917,35 @@ public class Program
                     p = a;
                     i = a.d;
                 }
-                   
+
             }
 
             _in.Add(p.v);
 
             //Recalcula o valor de d para os vertices restantes
-            for(i = 0; i < aux.Count; i++)
+            for (i = 0; i < aux.Count; i++)
             {
                 var z = aux[i];
 
                 if (!_in.Contains(z.v))
                 {
-                    if(z.d == 0)
+                    if (z.d == 0)
                     {
                         z.d = p.d + DistanciaDireta(grafo, z.v, p.v);
                         z.s = p.v;
-                    }else if (z.d > p.d + DistanciaDireta(grafo, z.v, p.v))
+                    }
+                    else if (z.d > p.d + DistanciaDireta(grafo, z.v, p.v))
                     {
                         z.d = p.d + DistanciaDireta(grafo, z.v, p.v);
                         z.s = p.v;
-                    }                    
+                    }
                 }
                 aux[i] = z;
             }
         }
 
         //Imprime as distancias para cada vertice
-        foreach(var a in aux)
+        foreach (var a in aux)
         {
             Console.WriteLine("Vertice: " + a.v.Nome + " d: " + a.d + " s: " + a.s.Nome);
         }
@@ -889,7 +955,7 @@ public class Program
         AuxDijkstra y1 = new AuxDijkstra();
         AuxDijkstra x1 = new AuxDijkstra();
 
-        foreach (var a in aux)        
+        foreach (var a in aux)
             if (a.v.Equals(y))
                 y1 = a;
 
@@ -903,7 +969,7 @@ public class Program
                 if (a.v.Equals(x1.s))
                     x1 = a;
 
-        } while(!x1.v.Equals(x));
+        } while (!x1.v.Equals(x));
 
         Console.WriteLine("\nA distância miníma é: " + y1.d);
 
@@ -937,7 +1003,7 @@ public class Program
     public struct Componente
     {
         public List<Vertice> vertices;
-        public int id;      
+        public int id;
 
         public Componente(List<Vertice> vertices, int id)
         {
@@ -970,9 +1036,9 @@ public class Program
                 {
                     bool existeCaminho = false;
 
-                    foreach(var v1 in componente.vertices)                    
+                    foreach (var v1 in componente.vertices)
                         if (matrizAcessibilidade[j, grafo.ListaVertices.IndexOf(v1)] != 9999 || matrizAcessibilidade[grafo.ListaVertices.IndexOf(v1), j] != 9999)
-                           existeCaminho = true;
+                            existeCaminho = true;
 
                     if (existeCaminho)
                     {
@@ -1003,7 +1069,7 @@ public class Program
             Console.WriteLine();
         }
 
-        
+
         _ = Console.ReadLine();
 
         return componentes;
@@ -1017,7 +1083,7 @@ public class Program
         int i = 0;
         foreach (var c in componentes)
         {
-            if(c.vertices.Count > i)
+            if (c.vertices.Count > i)
             {
                 i = c.vertices.Count;
                 maior = c;
@@ -1045,7 +1111,7 @@ public class Program
         {
             Console.Write("\n" + v.Nome);
 
-            foreach(var i in grafo.ListaVertices)
+            foreach (var i in grafo.ListaVertices)
             {
                 int a = 0;
 
@@ -1070,10 +1136,10 @@ public class Program
                 Console.Write(" |  " + a);
             }
         }
-        
+
         _ = Console.ReadLine();
     }
-    
+
     public static int[,] GetMatrizAdj(Grafo grafo)
     {
         var listaVertice = grafo.ListaVertices;
@@ -1084,7 +1150,7 @@ public class Program
         for (int v1 = 0; v1 < listaVertice.Count; v1++)
         {
             var v = listaVertice[v1];
-            
+
             for (int i1 = 0; i1 < listaVertice.Count; i1++)
             {
                 var i = grafo.ListaVertices[i1];
